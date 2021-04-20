@@ -1,0 +1,11 @@
+{
+  "name": "temp-link",
+  "version": "1.0.0",
+  "description": "generate a short lived link for messages that self-distruct",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Micah Effiong",
+  "license": "MIT"
+}
