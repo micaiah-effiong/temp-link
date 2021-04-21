@@ -23,7 +23,7 @@ module.exports = function (sequelize, DataType) {
         type: DataType.DATE,
         defaultValue: new Date().setFullYear(3000),
       },
-      clicks: {
+      count: {
         type: DataType.NUMBER,
         defaultValue: 1,
       },
@@ -37,6 +37,9 @@ module.exports = function (sequelize, DataType) {
       passcodeHash: {
         type: DataType.STRING,
       },
+      passcodeSalt: {
+        type: DataType.STRING,
+      },
     },
     {
       hooks: {
@@ -44,8 +47,13 @@ module.exports = function (sequelize, DataType) {
         beforeCreate: async function (model) {
           if (model.passcode) {
             model.setDataValue("isSecure", true);
-            const passcodeHash = await bcrypt.hash(model.passcode);
+            const passcodeSalt = await bcrypt.genSalt();
+            const passcodeHash = await bcrypt.hash(
+              model.passcode,
+              passcodeSalt
+            );
             model.setDataValue("passcodeHash", passcodeHash);
+            model.setDataValue("passcodeSalt", passcodeSalt);
           }
 
           const rounds = model.data.split(" ")[0].length * 5;
@@ -64,12 +72,25 @@ module.exports = function (sequelize, DataType) {
   );
 
   model.prototype.toPublicJSON = function () {
-    return _.omit(this.toJSON(), "passcode", "passcodeHash", "salt");
+    return _.omit(
+      this.toJSON(),
+      "passcode",
+      "passcodeHash",
+      "salt",
+      "passcodeSalt"
+    );
   };
 
   model.prototype.verify = async function (passcode) {
     const isValid = Boolean(await bcrypt.compare(passcode, this.passcodeHash));
+    console.log("isValid", isValid);
     return isValid;
+  };
+
+  model.prototype.expired = function () {
+    const now = new Date().getTime();
+    const ttl = new Date(this.ttl).getTime();
+    return now > ttl;
   };
 
   return model;
