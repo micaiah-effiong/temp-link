@@ -4,12 +4,20 @@
   "description": "generate a short lived link for messages that self-distruct",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm start"
   },
   "author": "Micah Effiong",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.17.1",
-    "sequelize": "^6.6.2"
+    "good-status": "^2.0.0",
+    "sequelize": "^6.6.2",
+    "underscore": "^1.13.1"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0",
+    "sqlite3": "^5.0.2"
   }
 }
