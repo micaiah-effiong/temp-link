@@ -1,4 +1,5 @@
 const http = require("http");
+const path = require("path");
 const express = require("express");
 const gs = require("good-status");
 const db = require("./models");
@@ -6,6 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(gs({ send: false }));
@@ -68,6 +70,7 @@ app.get("/message/:msgHash", async (req, res) => {
 
 // create message
 app.post("/message", async (req, res) => {
+  req.body.url = `${req.protocol}://${req.headers.host}/message/`;
   const msg = await db.Message.create(req.body);
   return res.created().json({ success: true, data: msg.toPublicJSON() });
 });
