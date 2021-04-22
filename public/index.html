@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create a one time link for you message</title>
+  </head>
+  <body>
+    <form
+      action="/message"
+      method="POST"
+      name="createMsg"
+      enctype="application/json"
+    >
+      <textarea name="data" placeholder="Type your message"></textarea>
+
+      <details open>
+        <summary>Advanced options</summary>
+        <div>
+          <div>
+            <input type="date" name="ttl" placeholder="Expiry date" />
+          </div>
+
+          <div>
+            <input
+              type="number"
+              min="0"
+              name="count"
+              placeholder="View limit"
+            />
+          </div>
+
+          <div>
+            <input
+              type="password"
+              name="passcode"
+              placeholder="Type your password"
+            />
+          </div>
+        </div>
+      </details>
+      <!-- <input type="" name="data">
+    <input type="" name="data"> -->
+      <button type="submit">Send</button>
+    </form>
+
+    <div>Share your link <a id="shareLink" href=""></a></div>
+
+    <script>
+      let form = document.createMsg;
+      const linkView = document.querySelector("#shareLink");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log(e);
+        let options = {};
+        options.headers = { "Content-Type": "application/json" };
+        options.body = parseForm(form);
+
+        makeRequest("/message", "POST", options).then((res) => {
+          console.log(res);
+          const url = res.data.url;
+          const link = document
+            .createRange()
+            .createContextualFragment(`<a href="${url}">${url}</a>`);
+
+          linkView.href = linkView.innerText = url;
+        });
+      });
+
+      function makeRequest(url, method, options) {
+        return fetch(url, {
+          method: method,
+          headers: options.headers,
+          body: JSON.stringify(options.body),
+        }).then((res) => res.json());
+      }
+
+      function parseForm(formElement) {
+        const obj = {};
+        Array.from(form.elements).forEach((e) => {
+          obj[e.name] = e.value;
+        });
+
+        return obj;
+      }
+    </script>
+  </body>
+</html>
