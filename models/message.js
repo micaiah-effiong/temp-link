@@ -10,6 +10,21 @@ module.exports = function (sequelize, DataType) {
         type: DataType.STRING,
         allowNull: false,
       },
+      ttl: {
+        type: DataType.DATE,
+        defaultValue: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7),
+      },
+      count: {
+        type: DataType.NUMBER,
+        defaultValue: 1,
+      },
+      passcode: {
+        type: DataType.VIRTUAL,
+      },
+      url: {
+        type: DataType.STRING,
+        allowNull: false,
+      },
       hash: {
         type: DataType.STRING,
         unique: true,
@@ -19,20 +34,9 @@ module.exports = function (sequelize, DataType) {
         type: DataType.STRING,
         unique: true,
       },
-      ttl: {
-        type: DataType.DATE,
-        defaultValue: new Date().setFullYear(3000),
-      },
-      count: {
-        type: DataType.NUMBER,
-        defaultValue: 1,
-      },
       isSecure: {
         type: DataType.BOOLEAN,
         defaultValue: false,
-      },
-      passcode: {
-        type: DataType.VIRTUAL,
       },
       passcodeHash: {
         type: DataType.STRING,
@@ -45,6 +49,15 @@ module.exports = function (sequelize, DataType) {
       hooks: {
         beforeValidate: async function (model, option) {},
         beforeCreate: async function (model) {
+          console.log(model);
+
+          if (!model.ttl) {
+            model.setDataValue(
+              "ttl",
+              new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7)
+            );
+          }
+
           if (model.passcode) {
             model.setDataValue("isSecure", true);
             const passcodeSalt = await bcrypt.genSalt();
@@ -66,6 +79,7 @@ module.exports = function (sequelize, DataType) {
 
           model.setDataValue("salt", salt);
           model.setDataValue("hash", hash);
+          model.setDataValue("url", model.url + hash);
         },
       },
     }
@@ -83,7 +97,6 @@ module.exports = function (sequelize, DataType) {
 
   model.prototype.verify = async function (passcode) {
     const isValid = Boolean(await bcrypt.compare(passcode, this.passcodeHash));
-    console.log("isValid", isValid);
     return isValid;
   };
 
