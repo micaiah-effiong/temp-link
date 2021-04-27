@@ -9,9 +9,20 @@ module.exports = function (sequelize, DataType) {
       data: {
         type: DataType.STRING,
         allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Message cannot be empty",
+          },
+        },
       },
       ttl: {
         type: DataType.DATE,
+        validate: {
+          isAfter: {
+            args: new Date().toLocaleDateString("en-ca"),
+            msg: "Detruction date must be a future date",
+          },
+        },
         defaultValue: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7),
       },
       count: {
@@ -24,6 +35,11 @@ module.exports = function (sequelize, DataType) {
       url: {
         type: DataType.STRING,
         allowNull: false,
+        validate: {
+          isUrl: {
+            msg: "The URL is not a valid HTTP URL",
+          },
+        },
       },
       hash: {
         type: DataType.STRING,
@@ -49,7 +65,7 @@ module.exports = function (sequelize, DataType) {
       hooks: {
         beforeValidate: async function (model, option) {},
         beforeCreate: async function (model) {
-          console.log(model);
+          // console.log(model);
 
           if (!model.ttl) {
             model.setDataValue(
@@ -85,13 +101,14 @@ module.exports = function (sequelize, DataType) {
     }
   );
 
-  model.prototype.toPublicJSON = function () {
+  model.prototype.toPublicJSON = function (...data) {
     return _.omit(
       this.toJSON(),
       "passcode",
       "passcodeHash",
       "salt",
-      "passcodeSalt"
+      "passcodeSalt",
+      ...data
     );
   };
 
