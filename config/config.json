@@ -6,15 +6,14 @@
     "logging": null
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "database": "data/db.sqlite",
+    "storage": "./data/db.sqlite",
+    "dialect": "sqlite",
+    "logging": null
   },
   "production": {
     "username": "root",
-    "password": null,
+    "password": "",
     "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "mysql"
