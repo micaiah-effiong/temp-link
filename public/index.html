@@ -2,47 +2,76 @@
 <html>
   <head>
     <title>Create a one time link for you message</title>
+    <link type="text/css" rel="stylesheet" href="/styles/main.css" />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
   </head>
   <body>
-    <form
-      action="/message"
-      method="POST"
-      name="createMsg"
-      enctype="application/json"
-    >
-      <textarea name="data" placeholder="Type your message"></textarea>
+    <header class="page-header">
+      <h2>Create link</h2>
+      <div>
+        <p>
+          Create a temporary link for your product, business and organisation.
+        </p>
+        <p>Links created will expire after a week if date is not specified.</p>
+      </div>
+    </header>
 
-      <details open>
-        <summary>Advanced options</summary>
-        <div>
-          <div>
-            <input type="date" name="ttl" placeholder="Expiry date" />
-          </div>
+    <main class="page-main">
+      <form
+        action="/message"
+        method="POST"
+        name="createMsg"
+        enctype="application/json"
+        class="page-form-create-msg"
+      >
+        <textarea name="data" placeholder="Type your message"></textarea>
 
+        <details class="page-form-adv-create-msg">
+          <summary>Advanced options</summary>
           <div>
-            <input
-              type="number"
-              min="0"
-              name="count"
-              placeholder="View limit"
-            />
-          </div>
+            <div>
+              <input
+                type="datetime-local"
+                name="ttl"
+                placeholder="Expiry date"
+              />
+            </div>
 
-          <div>
-            <input
-              type="password"
-              name="passcode"
-              placeholder="Type your password"
-            />
+            <div>
+              <input
+                type="number"
+                min="0"
+                name="count"
+                placeholder="View limit"
+              />
+            </div>
+
+            <div>
+              <input
+                type="password"
+                name="passcode"
+                placeholder="Type your password"
+              />
+            </div>
           </div>
-        </div>
-      </details>
-      <!-- <input type="" name="data">
+        </details>
+        <!-- <input type="" name="data">
     <input type="" name="data"> -->
-      <button type="submit">Send</button>
-    </form>
+        <button type="submit">Send</button>
+      </form>
 
-    <div>Share your link <a id="shareLink" href=""></a></div>
+      <div>Share your link <a id="shareLink" href=""></a></div>
+    </main>
+
+    <script type="text/javascript" src="/js/makeRequest.js"></script>
 
     <script>
       let form = document.createMsg;
@@ -59,25 +88,13 @@
         makeRequest("/message", "POST", options).then((res) => {
           console.log(res);
           const url = res.data.url;
-          const link = document
-            .createRange()
-            .createContextualFragment(`<a href="${url}">${url}</a>`);
-
-          linkView.href = linkView.innerText = url;
+          linkView.href = linkView.innerText = url + "/view";
         });
       });
 
-      function makeRequest(url, method, options) {
-        return fetch(url, {
-          method: method,
-          headers: options.headers,
-          body: JSON.stringify(options.body),
-        }).then((res) => res.json());
-      }
-
       function parseForm(formElement) {
         const obj = {};
-        Array.from(form.elements).forEach((e) => {
+        Array.from(formElement.elements).forEach((e) => {
           obj[e.name] = e.value;
         });
 

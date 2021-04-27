@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.page-header {
+  padding: 13px;
+}
+
+.page-main {
+  padding: 13px;
+}
+
+.page-form-create-msg {
+  margin: 13px;
+  border-radius: 5px;
+}
+.page-form-create-msg input,
+.page-form-create-msg button {
+  padding: 7px;
+  border-radius: 5px;
+  border-style: solid;
+}
+.page-form-create-msg > * {
+  margin: 13px;
+}
+
+.page-form-adv-create-msg > div > * {
+  margin: 13px;
+}
