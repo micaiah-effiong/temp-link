@@ -12,6 +12,12 @@
     "logging": null
   },
   "production": {
+    "database": "data/db.sqlite",
+    "storage": "./data/db.sqlite",
+    "dialect": "sqlite",
+    "logging": null
+  },
+  "serverles-production": {
     "username": "root",
     "password": "",
     "database": "database_production",
