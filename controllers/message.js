@@ -1,4 +1,7 @@
-exports.getMsg = async (req, res) => {
+const db = require("../models");
+const asyncHandler = require("../handlers/async-handler");
+
+const getMsg = async (req, res) => {
   // find message
   const msg = await db.Message.findOne({
     where: {
@@ -52,7 +55,7 @@ exports.getMsg = async (req, res) => {
   await msg.decrement("count");
 };
 
-exports.verify = async (req, res) => {
+const verify = async (req, res) => {
   const msg = await db.Message.findOne({
     where: {
       hash: req.params.msgHash,
@@ -87,8 +90,31 @@ exports.verify = async (req, res) => {
   return;
 };
 
-exports.create = async (req, res) => {
-  req.body.url = `${req.protocol}://${req.headers.host}/message/`;
-  const msg = await db.Message.create(req.body);
+const create = async (req, res) => {
+  if (process.env.NODE_ENV !== "production") {
+    req.body.url = `http://localhost.com:${3000}/message/`;
+  } else {
+    req.body.url = `${process.env.APP_URL}/message/`;
+  }
+
+  Object.entries(req.body).forEach((prop) => {
+    const key = prop[0];
+    const value = prop[1];
+    if (value === "") {
+      delete req.body[key];
+    }
+  });
+
+  const msg = await db.Message.create(req.body).catch((err) => {
+    console.log("err_name", err.name, err);
+    if (err.name.toLowerCase().includes("validation")) {
+      res.badRequest();
+    }
+    throw err;
+  });
   return res.created().json({ success: true, data: msg.toPublicJSON() });
 };
+
+exports.getMsg = asyncHandler(getMsg);
+exports.verify = asyncHandler(verify);
+exports.create = asyncHandler(create);
