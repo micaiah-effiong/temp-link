@@ -31,7 +31,7 @@
 
         <main class="page-main">
           <form
-            action="/message"
+            action="/api/message"
             method="POST"
             name="createMsg"
             enctype="application/json"
@@ -104,35 +104,6 @@
         </main>
       </div>
     </div>
-    <script type="text/javascript" src="./js/makeRequest.js"></script>
-
-    <script>
-      let form = document.createMsg;
-      const linkView = document.querySelector("#shareLink");
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log(e);
-        let options = {};
-        options.headers = { "Content-Type": "application/json" };
-        options.body = parseForm(form);
-
-        makeRequest("/message", "POST", options).then((res) => {
-          console.log(res);
-          const url = res.data.url;
-          linkView.href = linkView.innerText = url + "/view";
-        });
-      });
-
-      function parseForm(formElement) {
-        const obj = {};
-        Array.from(formElement.elements).forEach((e) => {
-          obj[e.name] = e.value;
-        });
-
-        return obj;
-      }
-    </script>
+    <script type="module" src="./js/index.js"></script>
   </body>
 </html>
