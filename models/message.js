@@ -17,17 +17,23 @@ module.exports = function (sequelize, DataType) {
       },
       ttl: {
         type: DataType.DATE,
+        allowNull: false,
+        defaultValue: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7),
         validate: {
+          notEmpty: true,
           isAfter: {
             args: new Date().toLocaleDateString("en-ca"),
             msg: "Detruction date must be a future date",
           },
         },
-        defaultValue: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7),
       },
       count: {
         type: DataType.NUMBER,
+        allowNull: false,
         defaultValue: 1,
+        validate: {
+          notEmpty: true,
+        },
       },
       passcode: {
         type: DataType.VIRTUAL,
@@ -63,17 +69,10 @@ module.exports = function (sequelize, DataType) {
     },
     {
       hooks: {
-        beforeValidate: async function (model, option) {},
+        beforeValidate: async function (model, option) {
+          // console.log(model, model.__proto__);
+        },
         beforeCreate: async function (model) {
-          // console.log(model);
-
-          if (!model.ttl) {
-            model.setDataValue(
-              "ttl",
-              new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7)
-            );
-          }
-
           if (model.passcode) {
             model.setDataValue("isSecure", true);
             const passcodeSalt = await bcrypt.genSalt();
