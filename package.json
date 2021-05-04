@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "build": ""
+    "dev": " nodemon index.js",
+    "watch": " npx parcel watch public/src/index.html --out-dir public",
+    "build": "npx parcel build public/src/index.html --out-dir public"
   },
   "author": "Micah Effiong",
   "license": "MIT",
@@ -18,12 +20,11 @@
     "express": "^4.17.1",
     "good-status": "^2.0.0",
     "sequelize": "^6.6.2",
-    "serverless-http": "^2.7.0",
     "sqlite3": "^5.0.2",
     "underscore": "^1.13.1"
   },
   "devDependencies": {
-    "parcel": "^2.0.0-beta.2",
+    "parcel-bundler": "^1.12.5",
     "sequelize-cli": "^6.2.0"
   },
   "repository": {
@@ -33,5 +34,8 @@
   "bugs": {
     "url": "https://github.com/micaiah-effiong/temp-link/issues"
   },
-  "homepage": "https://github.com/micaiah-effiong/temp-link#readme"
+  "homepage": "https://github.com/micaiah-effiong/temp-link#readme",
+  "browserslist": [
+    "since 2017-06"
+  ]
 }
