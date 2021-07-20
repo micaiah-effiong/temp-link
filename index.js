@@ -19,6 +19,9 @@ app.use(gs({ send: false }));
 // code goes here
 
 app.get("/message/:msgHash", messageCrtl.getMsg);
+app.get("/message/:msgHash/view", (req, res) => {
+  return res.sendFile(path.join(__dirname, "public", "view-message.html"));
+});
 
 //API
 
