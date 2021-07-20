@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": " nodemon index.js",
-    "watch": " npx parcel watch public/src/index.html --out-dir public",
-    "build": "npx parcel build public/src/index.html --out-dir public"
+    "watch": "parcel watch public/src/index.html public/src/view-message.html --out-dir public",
+    "build": "parcel build public/src/index.html public/src/view-message.html --out-dir public"
   },
   "author": "Micah Effiong",
   "license": "MIT",
@@ -37,5 +37,10 @@
   "homepage": "https://github.com/micaiah-effiong/temp-link#readme",
   "browserslist": [
     "since 2017-06"
-  ]
+  ],
+  "nodemonConfig": {
+    "ignore": [
+      "public"
+    ]
+  }
 }
